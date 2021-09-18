@@ -20,6 +20,13 @@ public class Player : MonoBehaviour
     private float _horizontalInput;
     private float _rotationInput;
 
+    public int remainingLife;
+    public bool gameOver; // false when game still going, true when game over
+
+    public GameObject lightSource;
+
+    private int counter = 0;
+
     // Jumping
     private bool _jumpInput;
     private bool _clickButton;
@@ -29,8 +36,8 @@ public class Player : MonoBehaviour
     // The player metadata
     private Rigidbody _rigidbody;
     private Transform _transform;
-    
-    
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +49,9 @@ public class Player : MonoBehaviour
         _releasedJump = false;
 
         _numLemonade = 0;
-        
+        remainingLife = 100;
+        gameOver = false;
+
     }
 
     // Update is called once per frame
@@ -58,10 +67,36 @@ public class Player : MonoBehaviour
             _numLemonade++;
             lemonadeCountText.text = "Lemonade Count: " + _numLemonade;
         }
+
+        if (remainingLife <= 0)
+        {
+            gameOver = true;
+        }
     }
 
     private void FixedUpdate()
     {
+        // if in the shade, recharge life; 
+        bool isUnderSun = Physics.Raycast(transform.position, lightSource.transform.position);
+        if (!isUnderSun)
+        {
+            counter += 1;
+            if (counter >= 20)
+            { 
+                remainingLife -= 2;
+                counter = 0;
+            }
+        }
+        else
+        {
+            counter -= 2;
+            if (counter <= 0)
+            {
+                remainingLife += 5;
+                counter = 0;
+            }
+        }
+        // if in the sun, deplete life;
         ChangePlayerDirection();
         if (_jumpInput)
         {
@@ -81,6 +116,11 @@ public class Player : MonoBehaviour
         {
             _releasedJump = false;
             _hasPressedJump = false;
+        }
+
+        else if (other.gameObject.CompareTag("Car"))
+        {
+            remainingLife = 1;
         }
     }
 

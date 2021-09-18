@@ -122,7 +122,7 @@ Transform:
   - {fileID: 410036456}
   - {fileID: 634551106}
   m_Father: {fileID: 4448498777340517675}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1780853320
 MonoBehaviour:
@@ -162,7 +162,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1177234195260616, guid: 1bd4e0ba5608fab449caf9ead511d662, type: 3}
       propertyPath: m_Name
-      value: Sedan
+      value: CarPath
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177234195260616, guid: 1bd4e0ba5608fab449caf9ead511d662, type: 3}
+      propertyPath: m_TagString
+      value: Car
       objectReference: {fileID: 0}
     - target: {fileID: 4226531806419744, guid: 1bd4e0ba5608fab449caf9ead511d662, type: 3}
       propertyPath: m_RootOrder
