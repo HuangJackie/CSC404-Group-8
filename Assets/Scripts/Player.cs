@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
 
     public int remainingLife;
     public bool gameOver; // false when game still going, true when game over
+    public bool winGame; // True when you win, false when you lose
 
     public GameObject lightSource;
 
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour
         _numLemonade = 0;
         remainingLife = 100;
         gameOver = false;
-
+        winGame = false;
 
         npcList.Add("Npc1", true);
         npcList.Add("Npc2", true);
@@ -81,7 +82,6 @@ public class Player : MonoBehaviour
 
         if (remainingLife <= 0)
         {
-            remainingLifeText.text = "You are dehydrated!";
             gameOver = true;
         }
         else
@@ -91,11 +91,18 @@ public class Player : MonoBehaviour
 
         if (!npcList["Npc1"] && !npcList["Npc2"] && !npcList["Npc3"])
         {
-            interactLemonStandText.text = "You Win!";
+            winGame = true;
+            gameOver = true;
         }
 
-        if (gameOver == true)
+        if (gameOver && winGame)
         {
+            interactLemonStandText.text = "You Win!";
+            movementSpeed = 0;
+        }
+        else if (gameOver == true && winGame == false)
+        {
+            remainingLifeText.text = "You are dehydrated!";
             movementSpeed = 0;
         }
     }
@@ -104,22 +111,25 @@ public class Player : MonoBehaviour
     {
         // if in the shade, recharge life; 
         bool isUnderSun = Physics.Raycast(transform.position, lightSource.transform.position);
-        if (!isUnderSun)
+        if (gameOver == false)
         {
-            counter += 1;
-            if (counter >= 20)
-            { 
-                remainingLife -= 2;
-                counter = 0;
-            }
-        }
-        else
-        {
-            counter -= 2;
-            if (counter <= 0)
+            if (!isUnderSun)
             {
-                remainingLife += 5;
-                counter = 0;
+                counter += 1;
+                if (counter >= 20)
+                {
+                    remainingLife -= 2;
+                    counter = 0;
+                }
+            }
+            else
+            {
+                counter -= 2;
+                if (counter <= 0)
+                {
+                    remainingLife += 5;
+                    counter = 0;
+                }
             }
         }
         // if in the sun, deplete life;
