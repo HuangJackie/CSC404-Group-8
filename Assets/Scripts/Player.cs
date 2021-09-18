@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 
     public Text interactLemonStandText;
     public Text lemonadeCountText;
+    public Text remainingLifeText;
 
     private int _numLemonade;
     private bool _nearStand;
@@ -69,6 +70,8 @@ public class Player : MonoBehaviour
         _rotationInput = Input.GetAxis("Horizontal");
         _jumpInput = Input.GetButton("Jump");
         _clickButton = Input.GetButtonDown("Fire1");
+
+        remainingLifeText.text = "Remaining Life : " + remainingLife;
 
         if (_nearStand && _clickButton)
         {
