@@ -7,19 +7,21 @@ public class Player : MonoBehaviour
 {
     public float movementSpeed;
     public float gravity;
-    
+    public float movementDrag;
+    public float maxJumpHeight;
+
     private float _horizontalInput;
     private float _rotationInput;
-    
+
     // Jumping
     private bool _jumpInput;
     private bool _hasPressedJump;
     private bool _releasedJump;
-    
+
     // The player metadata
     private Rigidbody _rigidbody;
     private Transform _transform;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +48,7 @@ public class Player : MonoBehaviour
             _hasPressedJump = true;
         }
 
-        if (_hasPressedJump && !_jumpInput)
+        if ((_hasPressedJump && !_jumpInput) || transform.position.y > maxJumpHeight)
         {
             _releasedJump = true;
         }
@@ -65,8 +67,22 @@ public class Player : MonoBehaviour
     {
         Vector3 newVelocity = _rigidbody.velocity;
         newVelocity.y -= gravity * Time.deltaTime;
-        _rigidbody.velocity = newVelocity + transform.forward * _horizontalInput * movementSpeed;
-        
+
+        if (_horizontalInput != 0)
+        {
+            newVelocity += transform.forward * _horizontalInput * movementSpeed;
+        }
+        else
+        {
+            newVelocity.x = 0;
+            newVelocity.z = 0;
+            
+            // newVelocity.x = reduceVelocity(newVelocity.x);
+            // newVelocity.z = reduceVelocity(newVelocity.z);
+        }
+
+        _rigidbody.velocity = newVelocity;
+
         Vector3 userRotation = transform.rotation.eulerAngles;
         userRotation += new Vector3(0, _rotationInput, 0);
         _transform.rotation = Quaternion.Euler(userRotation);
@@ -75,6 +91,26 @@ public class Player : MonoBehaviour
         {
             _rigidbody.AddForce(Vector3.up, ForceMode.VelocityChange);
         }
+    }
 
+    float reduceVelocity(float originalVelocity)
+    {
+        Debug.Log(Math.Abs(originalVelocity - (movementSpeed * Time.deltaTime)));
+        if (Math.Abs(originalVelocity - (movementSpeed * Time.deltaTime)) < 1)
+        {
+            return 0f;
+        }
+
+        if (originalVelocity > 0)
+        {
+            return originalVelocity - movementDrag * Time.deltaTime;
+        }
+
+        if (originalVelocity < 0)
+        {
+            return originalVelocity + movementDrag * Time.deltaTime;
+        }
+
+        return originalVelocity;
     }
 }
