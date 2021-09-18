@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Ground
   - LemonStand
+  - Npc
+  - Npc1
+  - Npc2
+  - Npc3
   layers:
   - Default
   - TransparentFX
