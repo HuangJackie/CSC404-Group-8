@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,17 +11,26 @@ public class Player : MonoBehaviour
     public float movementDrag;
     public float maxJumpHeight;
 
+    public Text interactLemonStandText;
+    public Text lemonadeCountText;
+
+    private int _numLemonade;
+    private bool _nearStand;
+
     private float _horizontalInput;
     private float _rotationInput;
 
     // Jumping
     private bool _jumpInput;
+    private bool _clickButton;
     private bool _hasPressedJump;
     private bool _releasedJump;
 
     // The player metadata
     private Rigidbody _rigidbody;
     private Transform _transform;
+    
+    
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +40,9 @@ public class Player : MonoBehaviour
 
         _hasPressedJump = false;
         _releasedJump = false;
+
+        _numLemonade = 0;
+        
     }
 
     // Update is called once per frame
@@ -38,6 +51,13 @@ public class Player : MonoBehaviour
         _horizontalInput = Input.GetAxis("Vertical");
         _rotationInput = Input.GetAxis("Horizontal");
         _jumpInput = Input.GetButton("Jump");
+        _clickButton = Input.GetButtonDown("Fire1");
+        
+        if (_nearStand && _clickButton)
+        {
+            _numLemonade++;
+            lemonadeCountText.text = "Lemonade Count: " + _numLemonade;
+        }
     }
 
     private void FixedUpdate()
@@ -53,6 +73,7 @@ public class Player : MonoBehaviour
             _releasedJump = true;
         }
     }
+    
 
     private void OnCollisionEnter(Collision other)
     {
@@ -112,5 +133,23 @@ public class Player : MonoBehaviour
         }
 
         return originalVelocity;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("LemonStand"))
+        {
+            interactLemonStandText.text = "Press E to get Lemonade";
+            _nearStand = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("LemonStand"))
+        {
+            interactLemonStandText.text = "";
+            _nearStand = true;
+        }
     }
 }
