@@ -93,6 +93,11 @@ public class Player : MonoBehaviour
         {
             interactLemonStandText.text = "You Win!";
         }
+
+        if (gameOver == true)
+        {
+            movementSpeed = 0;
+        }
     }
 
     private void FixedUpdate()
