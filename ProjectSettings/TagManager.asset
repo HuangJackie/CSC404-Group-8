@@ -6,7 +6,14 @@ TagManager:
   tags:
   - Ground
   - LemonStand
+<<<<<<< HEAD
   - Car
+=======
+  - Npc
+  - Npc1
+  - Npc2
+  - Npc3
+>>>>>>> 4cfb9ecae137552e54be49e85ca45f82e0ab63f4
   layers:
   - Default
   - TransparentFX

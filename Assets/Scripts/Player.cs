@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    private Dictionary<String, bool> npcList = new Dictionary<String, bool>();
+
     public float movementSpeed;
     public float gravity;
     public float movementDrag;
@@ -16,6 +18,9 @@ public class Player : MonoBehaviour
 
     private int _numLemonade;
     private bool _nearStand;
+    private bool _nearNpc;
+
+    private GameObject _currentNpc;
 
     private float _horizontalInput;
     private float _rotationInput;
@@ -36,8 +41,7 @@ public class Player : MonoBehaviour
     // The player metadata
     private Rigidbody _rigidbody;
     private Transform _transform;
-
-
+    
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,10 @@ public class Player : MonoBehaviour
         remainingLife = 100;
         gameOver = false;
 
+
+        npcList.Add("Npc1", true);
+        npcList.Add("Npc2", true);
+        npcList.Add("Npc3", true);
     }
 
     // Update is called once per frame
@@ -61,7 +69,7 @@ public class Player : MonoBehaviour
         _rotationInput = Input.GetAxis("Horizontal");
         _jumpInput = Input.GetButton("Jump");
         _clickButton = Input.GetButtonDown("Fire1");
-        
+
         if (_nearStand && _clickButton)
         {
             _numLemonade++;
@@ -71,6 +79,11 @@ public class Player : MonoBehaviour
         if (remainingLife <= 0)
         {
             gameOver = true;
+        }
+
+        if (!npcList["Npc1"] && !npcList["Npc2"] && !npcList["Npc3"])
+        {
+            interactLemonStandText.text = "You Win!";
         }
     }
 
@@ -108,7 +121,7 @@ public class Player : MonoBehaviour
             _releasedJump = true;
         }
     }
-    
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -137,7 +150,7 @@ public class Player : MonoBehaviour
         {
             newVelocity.x = 0;
             newVelocity.z = 0;
-            
+
             // newVelocity.x = reduceVelocity(newVelocity.x);
             // newVelocity.z = reduceVelocity(newVelocity.z);
         }
@@ -181,6 +194,40 @@ public class Player : MonoBehaviour
         {
             interactLemonStandText.text = "Press E to get Lemonade";
             _nearStand = true;
+        }
+        else if (other.gameObject.CompareTag("Npc1") && _numLemonade > 0)
+        {
+            Debug.Log("Npc1");
+            if (npcList["Npc1"])
+            {
+                _numLemonade--;
+                lemonadeCountText.text = "Lemonade Count: " + _numLemonade;
+
+            }
+
+            npcList["Npc1"] = false;
+        }
+        else if (other.gameObject.CompareTag("Npc2") && _numLemonade > 0)
+        {
+            if (npcList["Npc2"])
+            {
+                _numLemonade--;
+                lemonadeCountText.text = "Lemonade Count: " + _numLemonade;
+
+            }
+
+            npcList["Npc2"] = false;
+        }
+        else if (other.gameObject.CompareTag("Npc3") && _numLemonade > 0)
+        {
+            if (npcList["Npc3"])
+            {
+                _numLemonade--;
+                lemonadeCountText.text = "Lemonade Count: " + _numLemonade;
+
+            }
+
+            npcList["Npc3"] = false;
         }
     }
 
