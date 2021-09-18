@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
         _jumpInput = Input.GetButton("Jump");
         _clickButton = Input.GetButtonDown("Fire1");
 
-        remainingLifeText.text = "Remaining Life : " + remainingLife;
+        
 
         if (_nearStand && _clickButton)
         {
@@ -81,7 +81,12 @@ public class Player : MonoBehaviour
 
         if (remainingLife <= 0)
         {
+            remainingLifeText.text = "You are dehydrated!";
             gameOver = true;
+        }
+        else
+        {
+            remainingLifeText.text = "Remaining Life : " + remainingLife;
         }
 
         if (!npcList["Npc1"] && !npcList["Npc2"] && !npcList["Npc3"])
